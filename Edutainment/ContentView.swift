@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var firstNumber = 2
-    @State private var secondNumber = 12
-    @State private var numberOfQuestions = 10
+    @State private var fromNumber = 2
+    @State private var toNumber = 12
+    @State private var numberOfQuestions = 5
     
     private var numbersOfQuestions = [5, 10, 20]
     
@@ -18,27 +18,25 @@ struct ContentView: View {
         NavigationStack {
             VStack {
                 Form {
-                    // first number
+                    // from number
                     Section {
-                        Stepper("Up to... \(firstNumber)", value: $firstNumber, in: 1...secondNumber)
+                        Stepper("\(fromNumber)", value: $fromNumber, in: 1...toNumber - 1)
                     } header: {
-                        Text("First Number")
+                        Text("From Number")
                     }
                     
-                    // second number
+                    // to number
                     Section {
-                        Stepper("Up to... \(secondNumber)", value: $secondNumber, in: firstNumber...12)
+                        Stepper("\(toNumber)", value: $toNumber, in: fromNumber + 1...12)
                     } header: {
-                        Text("Second Number")
+                        Text("To Number")
                     }
                     
                     // number of question
                     Section {
                         Picker("Number of Question", selection: $numberOfQuestions) {
-                            ForEach(5..<21) {
-                                if $0 % 5 == 0 {
-                                    Text("\($0)")
-                                }
+                            ForEach(numbersOfQuestions, id: \.self) {
+                                Text("\($0)")
                             }
                         }
                     } header: {
@@ -48,6 +46,7 @@ struct ContentView: View {
                 
                 NavigationLink {
                     // main game
+                    MainGameView(fromNumber: fromNumber, toNumber: toNumber, numberOfQuestion: numberOfQuestions)
                 } label: {
                     Text("START")
                         .font(.largeTitle)

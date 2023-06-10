@@ -11,6 +11,7 @@
 		7B8559032A303A4D00BD17C2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8559022A303A4D00BD17C2 /* ContentView.swift */; };
 		7B8559052A303A4D00BD17C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B8559042A303A4D00BD17C2 /* Assets.xcassets */; };
 		7B8559082A303A4D00BD17C2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B8559072A303A4D00BD17C2 /* Preview Assets.xcassets */; };
+		7BDE87882A3043C90097FA5A /* MainGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDE87872A3043C90097FA5A /* MainGameView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +20,7 @@
 		7B8559022A303A4D00BD17C2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7B8559042A303A4D00BD17C2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7B8559072A303A4D00BD17C2 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		7BDE87872A3043C90097FA5A /* MainGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainGameView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +55,7 @@
 			children = (
 				7B8559002A303A4D00BD17C2 /* EdutainmentApp.swift */,
 				7B8559022A303A4D00BD17C2 /* ContentView.swift */,
+				7BDE87872A3043C90097FA5A /* MainGameView.swift */,
 				7B8559042A303A4D00BD17C2 /* Assets.xcassets */,
 				7B8559062A303A4D00BD17C2 /* Preview Content */,
 			);
@@ -138,6 +141,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7B8559032A303A4D00BD17C2 /* ContentView.swift in Sources */,
+				7BDE87882A3043C90097FA5A /* MainGameView.swift in Sources */,
 				7B8559012A303A4D00BD17C2 /* EdutainmentApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
