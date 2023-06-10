@@ -43,6 +43,8 @@ struct ContentView: View {
                         Text("Pick Number of Question")
                     }
                 }
+                .scrollContentBackground(.hidden)
+                .background(.yellow)
                 
                 NavigationLink {
                     // main game
@@ -57,6 +59,7 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("Edutainment")
+            .background(.yellow)
         }
     }
 }

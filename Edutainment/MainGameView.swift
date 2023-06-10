@@ -8,85 +8,137 @@
 import SwiftUI
 
 struct MainGameView: View {
-    var numberOfQuestion: Int
+    var fromNumber: Int
+    var toNumber: Int
+    @State private var numberOfQuestion: Int
     
-    private var firstNumbers = [0]
-    private var secondNumbers = [0]
+    @State private var firstNumbers: [Int]
+    @State private var secondNumbers: [Int]
     
     @State private var inputValue = ""
     @State private var currentQuestion = 0
     @State private var isCorrect = false
     @State private var isFinish = false
+    @State private var animateWrong = false
+    @State private var animateCorrect = false
+    
+    @State private var score = 0
     
     @FocusState private var isFocused
     
     init(fromNumber: Int, toNumber: Int, numberOfQuestion: Int) {
+        self.fromNumber = fromNumber
+        self.toNumber = toNumber
         self.numberOfQuestion = numberOfQuestion
         
-        self.firstNumbers = generateNumbers(fromNumber: fromNumber, toNumber: toNumber)
-        self.secondNumbers = generateNumbers(fromNumber: fromNumber, toNumber: toNumber)
+        var arrayOfNumber = [Int]()
         
-//        print(self.firstNumbers)
-//        print(self.secondNumbers)
-//        print(numberOfQuestion)
+        for _ in 0..<numberOfQuestion {
+            let number = Int.random(in: fromNumber...toNumber)
+            arrayOfNumber.append(number)
+        }
+        
+        self.firstNumbers = arrayOfNumber
+        self.secondNumbers = arrayOfNumber.shuffled()
+        
+        print(self.firstNumbers)
+        print(self.secondNumbers)
+        print(numberOfQuestion)
     }
     
     
     
     var body: some View {
-        VStack {
-            Spacer()
-            Spacer()
+        ZStack {
+            Color.mint
             
-            ZStack {
-                Color.mint
-                    .frame(width: 200, height: 100)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                Text("\(firstNumbers[currentQuestion]) x \(secondNumbers[currentQuestion])")
-                    .font(.largeTitle)
-                    .foregroundColor(.black)
-            }
-            
-            Spacer()
-            
-            TextField("Input Answer", text: $inputValue)
-                .foregroundColor(.white)
-                .font(.title)
-                .frame(width: 200)
-                .padding(15)
-                .background(.yellow)
-                .clipShape(Capsule())
-                .multilineTextAlignment(.center)
-                .keyboardType(.numberPad)
-                .focused($isFocused)
-                .disabled(isFinish)
-            
-            Spacer()
-            
-            if isCorrect {
-                Text("Correct")
-            }
-            
-            Spacer()
-        }
-        .padding()
-        .toolbar {
-            ToolbarItemGroup(placement: .keyboard) {
+            VStack {
                 Spacer()
                 
-                Button("SUBMIT") {
-                    isFocused = false
-                    checkAnswer()
+                Text("Score: \(score)")
+                    .font(.title)
+                    .foregroundColor(.mint)
+                    .padding()
+                    .background(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+
+                Spacer()
+                
+                ZStack {
+                    if animateWrong {
+                        Color.red
+                            .frame(width: 200, height: 100)
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                    } else if animateCorrect {
+                        Color.green
+                            .frame(width: 200, height: 100)
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                    } else {
+                        Color.yellow
+                            .frame(width: 200, height: 100)
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                    }
+                    
+                    Text("\(firstNumbers[currentQuestion]) x \(secondNumbers[currentQuestion])")
+                        .font(.largeTitle)
+                        .foregroundColor(.gray)
                 }
-                .padding(5)
-                .foregroundColor(.white)
-                .background(.mint)
-                .clipShape(Capsule())
+                
+                Spacer()
+                
+                if isFinish {
+                    Button {
+                        restart()
+                    } label: {
+                        Text("Restart")
+                            .font(.title)
+                            .foregroundColor(.white)
+                            .frame(width: 200)
+                            .padding(15)
+                            .background(.yellow)
+                            .clipShape(Capsule())
+                    }
+                } else {
+                    TextField("Input Answer", text: $inputValue)
+                        .foregroundColor(.white)
+                        .font(.title)
+                        .frame(width: 200)
+                        .padding(15)
+                        .background(.yellow)
+                        .clipShape(Capsule())
+                        .multilineTextAlignment(.center)
+                        .keyboardType(.numberPad)
+                        .focused($isFocused)
+                }
+                
+                Spacer()
+                Spacer()
+            }
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    
+                    Button("SUBMIT") {
+                        isFocused = false
+                        checkAnswer()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            withAnimation {
+                                animateWrong = false
+                                animateCorrect = false
+                            }
+                        }
+                    }
+                    .padding(5)
+                    .foregroundColor(.white)
+                    .background(.mint)
+                    .clipShape(Capsule())
+                }
             }
         }
+        .ignoresSafeArea()
     }
     
-    func generateNumbers(fromNumber: Int, toNumber: Int) -> [Int] {
+    func generateNumbers(fromNumber: Int, toNumber: Int) {
         var arrayOfNumber = [Int]()
 
         for _ in 0..<numberOfQuestion {
@@ -94,7 +146,8 @@ struct MainGameView: View {
             arrayOfNumber.append(number)
         }
         
-        return arrayOfNumber
+        firstNumbers = arrayOfNumber
+        secondNumbers = arrayOfNumber.shuffled()
     }
     
     func checkAnswer() {
@@ -102,8 +155,18 @@ struct MainGameView: View {
         
         if Int(inputValue) == correctAnswer {
             isCorrect = true
+            score += 1
+            
+            withAnimation {
+                animateCorrect = true
+            }
         } else {
             isCorrect = false
+            score -= 1
+            
+            withAnimation {
+                animateWrong = true
+            }
         }
         
         inputValue = ""
@@ -111,9 +174,15 @@ struct MainGameView: View {
         if currentQuestion != numberOfQuestion - 1 {
             currentQuestion += 1
         } else {
-            inputValue = "Finish"
             isFinish = true
         }
+    }
+    
+    func restart() {
+        score = 0
+        currentQuestion = 0
+        generateNumbers(fromNumber: fromNumber, toNumber: toNumber)
+        isFinish = false
     }
 }
 
